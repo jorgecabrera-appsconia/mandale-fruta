@@ -1,0 +1,142 @@
+/* Premium styling for Fruit 2048 */
+:root {
+  --bg-primary: hsl(210, 30%, 12%);
+  --bg-secondary: hsl(210, 30%, 18%);
+  --grid-gap: 12px;
+  --tile-radius: 12px;
+  --font-family: 'Inter', sans-serif;
+  --title-color: hsl(0, 0%, 95%);
+  --score-bg: hsl(0, 0%, 20%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: var(--title-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  padding: 20px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-board {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.score {
+  background: var(--score-bg);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  min-width: 80px;
+}
+
+.grid {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--tile-radius);
+  padding: var(--grid-gap);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--grid-gap);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.cell {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--tile-radius);
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #fff;
+  overflow: hidden;
+}
+
+.cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+/* Fruit images for specific values */
+.cell[data-value="2"]::before {background-image: url('fruit_2.png');}
+.cell[data-value="4"]::before {background-image: url('fruit_4.png');}
+.cell[data-value="8"]::before {background-image: url('fruit_8.png');}
+.cell[data-value="16"]::before {background-image: url('fruit_16.png');}
+.cell[data-value="32"]::before {background-image: url('fruit_32.png');}
+.cell[data-value="64"]::before {background-image: url('fruit_64.png');}
+.cell[data-value="128"]::before {background-image: url('fruit_128.png');}
+.cell[data-value="256"]::before {background-image: url('fruit_256.png');}
+.cell[data-value="512"]::before {background-image: url('fruit_512.png');}
+.cell[data-value="1024"]::before {background-image: url('fruit_1024.png');}
+.cell[data-value="2048"]::before {background-image: url('fruit_2048.png');}
+
+.cell[data-value] {
+  font-size: 0;
+}
+
+.cell[data-value]::after {
+  content: attr(data-value);
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-shadow: 0 0 4px rgba(0,0,0,0.6);
+}
+
+.button {
+  margin-top: 1rem;
+  background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+
+.instructions {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

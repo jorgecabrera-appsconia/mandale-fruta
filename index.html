@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="Juego 2048 con frutas y frutos secos. Combina frutas para llegar a la Aceituna 🫒." />
-  <title>🍓 Mandale Fruta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mandale Fruta: el 2048 de frutas y frutos secos. Jugá gratis, instalá la app y competí por el Top 10." />
+  <title>🍓 Mandale Fruta — El 2048 de frutas</title>
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#c3e879" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -13,103 +13,93 @@
   <meta name="apple-mobile-web-app-title" content="Mandale Fruta" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="icon" type="image/png" href="icon-192.png" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="landing.css" />
 </head>
 <body>
+  <div class="wrap">
 
-  <header>
-    <h1 class="game-title">🍓 Mandale Fruta</h1>
-    <div class="scores">
-      <div class="score-box">
-        <span class="label">Puntos</span>
-        <span class="value" id="score">0</span>
+    <header class="hero">
+      <img class="hero-icon" src="icon-192.png" alt="Ícono de Mandale Fruta" />
+      <h1 class="hero-title">Mandale Fruta</h1>
+      <div class="hero-chain" aria-hidden="true">🍒 🍓 🍇 🥜 🍋 🍊 🫒</div>
+      <p class="hero-sub">El clásico 2048, pero con frutas y frutos secos. Deslizá, combiná iguales y llegá a la 🫒 Aceituna.</p>
+      <div class="hero-actions">
+        <button class="btn-install install-btn" id="install-hero">📲 Instalar</button>
+        <a class="btn-play" href="/jugar.html">🎮 Jugar ahora</a>
       </div>
-      <div class="score-box">
-        <span class="label">Mejor</span>
-        <span class="value" id="best">0</span>
+      <div class="badges">
+        <span class="badge">📶 Juega sin internet</span>
+        <span class="badge">⚡ Sin tiendas de apps</span>
+        <span class="badge">🏆 Top 10 online</span>
       </div>
-    </div>
-    <button class="btn" id="ver-record-btn" style="margin-left:auto;">🏆 Récords</button>
-  </header>
+    </header>
 
-  <div class="controls">
-    <button class="btn" id="restart-btn">↺ Reiniciar</button>
+    <section class="section" aria-labelledby="benefits-title">
+      <h2 class="section-title" id="benefits-title">¿Por qué instalarla?</h2>
+      <div class="features">
+        <div class="feature">
+          <span class="feature-icon">📲</span>
+          <div class="feature-title">Instalación al instante</div>
+          <p class="feature-text">Se agrega a tu pantalla de inicio en segundos. Sin descargas, sin tiendas, sin esperas.</p>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">✈️</span>
+          <div class="feature-title">Funciona offline</div>
+          <p class="feature-text">¿Sin datos? No importa. La app queda guardada en tu dispositivo y juega igual.</p>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🏆</span>
+          <div class="feature-title">Récords online</div>
+          <p class="feature-text">Entrá al Top 10 del juego: tu nombre y tu mejor puntaje, para siempre.</p>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🪶</span>
+          <div class="feature-title">Liviana y gratis</div>
+          <p class="feature-text">Ocupa poquísimo espacio y no tiene anuncios ni pagos. Solo frutas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="how-title">
+      <h2 class="section-title" id="how-title">Cómo jugar</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <p class="step-text">Deslizá el dedo <small>(o usá las flechas / WASD)</small> para mover las fichas.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <p class="step-text">Juntá dos frutas iguales <small>para combinarlas en la siguiente de la cadena.</small></p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <p class="step-text">Llegá a la Aceituna 🫒 <small>y firmá tu récord en el Top 10.</small></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final">
+      <h2>¿Listo para mandarle fruta?</h2>
+      <p>Instalala en tu teléfono y jugá donde quieras, incluso sin conexión.</p>
+      <button class="btn-install install-btn" id="install-final">📲 Instalar</button>
+    </section>
+
+    <footer>
+      <p>🍓 Mandale Fruta — un juego para aprender jugando.</p>
+      <p>Hecho con HTML, CSS y JavaScript.</p>
+    </footer>
+
   </div>
 
-  <div class="board-wrapper">
-    <div class="board" id="board">
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
-    </div>
-    <div class="tiles-layer" id="tiles-layer"></div>
-  </div>
-
-  <p class="hint">⌨️ Flechas o WASD &nbsp;|&nbsp; 📱 Desliza en pantalla</p>
-
-  <div class="legend">
-    <div class="legend-title">Cadena de Evolución</div>
-    <div class="legend-items" id="legend-items"></div>
-  </div>
-
-  <!-- Win overlay -->
-  <div class="overlay hidden" id="overlay-win">
-    <div class="overlay-box">
-      <span class="overlay-icon">🫒</span>
-      <div class="overlay-title" style="color:#c3e879;">¡Victoria!</div>
-      <div class="overlay-sub">¡Alcanzaste la Aceituna 🫒!<br>Puntuación: <strong id="win-score">0</strong></div>
-      <div class="overlay-actions">
-        <button class="btn-primary" id="continue-btn">🎮 Seguir Jugando</button>
-        <button class="btn-secondary" id="win-restart-btn">↺ Nuevo Juego</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Game Over overlay -->
-  <div class="overlay hidden" id="overlay-lose">
-    <div class="overlay-box">
-      <span class="overlay-icon">😔</span>
-      <div class="overlay-title" style="color:#e74c3c;">Game Over</div>
-      <div class="overlay-sub">No hay más movimientos posibles.<br>Puntuación final: <strong id="lose-score">0</strong></div>
-      <div class="overlay-actions">
-        <button class="btn-primary" id="lose-restart-btn">↺ Intentar de Nuevo</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de registro de récord (Top 10) -->
-  <div class="overlay hidden" id="overlay-record">
-    <div class="overlay-box">
-      <span class="overlay-icon">🍓</span>
-      <div class="overlay-title" style="color:#c3e879;">¡Top 10 Mandale Fruta!</div>
-      <div class="overlay-sub">Tu puntaje entró en los 10 mejores.<br>Registra tu nombre para dejar constancia.</div>
-      <div class="overlay-actions" style="flex-direction:column; gap:10px;">
-        <input type="text" id="record-nombre" placeholder="Tu nombre" maxlength="30" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
-        <input type="text" id="record-ident" placeholder="Escuela / Localidad / Barrio" maxlength="50" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
-        <button class="btn-primary" id="guardar-record-btn">💾 Guardar Récord</button>
-        <button class="btn-secondary" id="omitir-record-btn">Omitir</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Leaderboard público -->
-  <div class="overlay hidden" id="overlay-leaderboard">
-    <div class="overlay-box">
-      <span class="overlay-icon">🏅</span>
-      <div class="overlay-title" style="color:#c3e879;">Top 10 — Mandale Fruta</div>
-      <div id="leaderboard-lista" style="text-align:left; margin-bottom:22px; max-height:300px; overflow-y:auto;"></div>
-      <div class="overlay-actions">
-        <button class="btn-secondary" id="cerrar-leaderboard-btn">Cerrar</button>
-      </div>
+  <div class="modal hidden" id="install-modal" role="dialog" aria-modal="true" aria-labelledby="install-modal-title">
+    <div class="modal-box">
+      <span class="modal-icon" id="install-modal-icon">📲</span>
+      <div class="modal-title" id="install-modal-title">Instalá la app</div>
+      <div class="modal-body" id="install-modal-body"></div>
+      <button class="modal-close" id="install-modal-close">Entendido</button>
     </div>
   </div>
 
-  <script src="supabase.js"></script>
-  <script src="script.js"></script>
+  <script src="landing.js"></script>
 </body>
 </html>

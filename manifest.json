@@ -1,7 +1,8 @@
 {
   "name": "Mandale Fruta",
   "short_name": "Mandale Fruta",
-  "start_url": "/",
+  "description": "El 2048 de frutas y frutos secos: combiná, sumá puntos y llegá a la Aceituna 🫒.",
+  "start_url": "/jugar.html",
   "display": "standalone",
   "background_color": "#1c201b",
   "theme_color": "#c3e879",

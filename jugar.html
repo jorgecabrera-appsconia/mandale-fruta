@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Juego 2048 con frutas y frutos secos. Combina frutas para llegar a la Aceituna 🫒." />
+  <title>🍓 Mandale Fruta</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#c3e879" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mandale Fruta" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="icon" type="image/png" href="icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1 class="game-title">🍓 Mandale Fruta</h1>
+    <div class="scores">
+      <div class="score-box">
+        <span class="label">Puntos</span>
+        <span class="value" id="score">0</span>
+      </div>
+      <div class="score-box">
+        <span class="label">Mejor</span>
+        <span class="value" id="best">0</span>
+      </div>
+    </div>
+    <button class="btn" id="ver-record-btn" style="margin-left:auto;">🏆 Récords</button>
+  </header>
+
+  <div class="controls">
+    <a class="btn" href="/" style="text-decoration:none;">← Inicio</a>
+    <button class="btn" id="restart-btn" style="margin-left:auto;">↺ Reiniciar</button>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="board">
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+      <div class="board-bg-cell"></div><div class="board-bg-cell"></div>
+    </div>
+    <div class="tiles-layer" id="tiles-layer"></div>
+  </div>
+
+  <p class="hint">⌨️ Flechas o WASD &nbsp;|&nbsp; 📱 Desliza en pantalla</p>
+
+  <div class="legend">
+    <div class="legend-title">Cadena de Evolución</div>
+    <div class="legend-items" id="legend-items"></div>
+  </div>
+
+  <!-- Win overlay -->
+  <div class="overlay hidden" id="overlay-win">
+    <div class="overlay-box">
+      <span class="overlay-icon">🫒</span>
+      <div class="overlay-title" style="color:#c3e879;">¡Victoria!</div>
+      <div class="overlay-sub">¡Alcanzaste la Aceituna 🫒!<br>Puntuación: <strong id="win-score">0</strong></div>
+      <div class="overlay-actions">
+        <button class="btn-primary" id="continue-btn">🎮 Seguir Jugando</button>
+        <button class="btn-secondary" id="win-restart-btn">↺ Nuevo Juego</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over overlay -->
+  <div class="overlay hidden" id="overlay-lose">
+    <div class="overlay-box">
+      <span class="overlay-icon">😔</span>
+      <div class="overlay-title" style="color:#e74c3c;">Game Over</div>
+      <div class="overlay-sub">No hay más movimientos posibles.<br>Puntuación final: <strong id="lose-score">0</strong></div>
+      <div class="overlay-actions">
+        <button class="btn-primary" id="lose-restart-btn">↺ Intentar de Nuevo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de registro de récord (Top 10) -->
+  <div class="overlay hidden" id="overlay-record">
+    <div class="overlay-box">
+      <span class="overlay-icon">🍓</span>
+      <div class="overlay-title" style="color:#c3e879;">¡Top 10 Mandale Fruta!</div>
+      <div class="overlay-sub">Tu puntaje entró en los 10 mejores.<br>Registra tu nombre para dejar constancia.</div>
+      <div class="overlay-actions" style="flex-direction:column; gap:10px;">
+        <input type="text" id="record-nombre" placeholder="Tu nombre" maxlength="30" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
+        <input type="text" id="record-ident" placeholder="Escuela / Localidad / Barrio" maxlength="50" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
+        <button class="btn-primary" id="guardar-record-btn">💾 Guardar Récord</button>
+        <button class="btn-secondary" id="omitir-record-btn">Omitir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard público -->
+  <div class="overlay hidden" id="overlay-leaderboard">
+    <div class="overlay-box">
+      <span class="overlay-icon">🏅</span>
+      <div class="overlay-title" style="color:#c3e879;">Top 10 — Mandale Fruta</div>
+      <div id="leaderboard-lista" style="text-align:left; margin-bottom:22px; max-height:300px; overflow-y:auto;"></div>
+      <div class="overlay-actions">
+        <button class="btn-secondary" id="cerrar-leaderboard-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

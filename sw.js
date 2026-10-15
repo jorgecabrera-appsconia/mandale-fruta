@@ -1,10 +1,13 @@
-const CACHE_NAME = 'mandalefruta-v3';
+const CACHE_NAME = 'mandalefruta-v4';
 const ASSETS = [
   '/',
   '/index.html',
+  '/jugar.html',
   '/style.css',
   '/script.js',
   '/supabase.js',
+  '/landing.css',
+  '/landing.js',
   '/icon-192.png',
   '/icon-512.jpg',
   '/icon-512-maskable.jpg',

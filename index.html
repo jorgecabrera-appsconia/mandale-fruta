@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Juego 2048 con frutas y frutos secos. Combina frutas para llegar a la Aceituna 🫒." />
-  <title>🫒 Fruit 2048</title>
+  <title>🍓 Mandale Fruta</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#c3e879" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mandale Fruta" />
+  <link rel="apple-touch-icon" href="icon.jpg" />
+  <link rel="icon" type="image/jpeg" href="icon.jpg" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -389,6 +396,7 @@
         <span class="value" id="best">0</span>
       </div>
     </div>
+    <button class="btn" id="ver-record-btn" style="margin-left:auto;">🏆 Récords</button>
   </header>
 
   <div class="controls">
@@ -441,6 +449,34 @@
     </div>
   </div>
 
+  <!-- Modal de registro de récord (Top 10) -->
+  <div class="overlay hidden" id="overlay-record">
+    <div class="overlay-box">
+      <span class="overlay-icon">🍓</span>
+      <div class="overlay-title" style="color:#c3e879;">¡Top 10 Mandale Fruta!</div>
+      <div class="overlay-sub">Tu puntaje entró en los 10 mejores.<br>Registra tu nombre para dejar constancia.</div>
+      <div class="overlay-actions" style="flex-direction:column; gap:10px;">
+        <input type="text" id="record-nombre" placeholder="Tu nombre" maxlength="30" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
+        <input type="text" id="record-ident" placeholder="Escuela / Localidad / Barrio" maxlength="50" style="width:100%; padding:11px 20px; font-size:0.9rem; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--text-main);" />
+        <button class="btn-primary" id="guardar-record-btn">💾 Guardar Récord</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard público -->
+  <div class="overlay hidden" id="overlay-leaderboard">
+    <div class="overlay-box">
+      <span class="overlay-icon">🏅</span>
+      <div class="overlay-title" style="color:#c3e879;">Top 10 — Mandale Fruta</div>
+      <div id="leaderboard-lista" style="text-align:left; margin-bottom:22px; max-height:300px; overflow-y:auto;"></div>
+      <div class="overlay-actions">
+        <button class="btn-secondary" id="cerrar-leaderboard-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
   (() => {
     'use strict';
@@ -469,12 +505,19 @@
     let won       = false;
     let audioCtx  = null;
 
+    const SUPABASE_URL = 'https://wogykodoovgwcjdxmosw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvZ3lrb2Rvb3Znd2NqZHhtb3N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwOTczMzksImV4cCI6MjEwNzY3MzMzOX0.0svx5v2edhzt3dNdVvJ1Wk6h3EVK9nIZ2JYGcHcYSKY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const scoreEl     = document.getElementById('score');
     const bestEl      = document.getElementById('best');
     const tilesLayer  = document.getElementById('tiles-layer');
     const boardEl     = document.getElementById('board');
     const overlayWin  = document.getElementById('overlay-win');
     const overlayLose = document.getElementById('overlay-lose');
+    const overlayRecord  = document.getElementById('overlay-record');
+    const overlayLeaderboard = document.getElementById('overlay-leaderboard');
+    const leaderboardLista = document.getElementById('leaderboard-lista');
     const winScoreEl  = document.getElementById('win-score');
     const loseScoreEl = document.getElementById('lose-score');
 
@@ -608,9 +651,14 @@
       // Check win
       if (!won && grid.flat().includes(WIN_VAL)) {
         won = true;
-        setTimeout(() => {
+        setTimeout(async () => {
           winScoreEl.textContent = score.toLocaleString();
-          overlayWin.classList.remove('hidden');
+          if (await esTop10(score)) {
+            overlayWin.classList.add('hidden');
+            overlayRecord.classList.remove('hidden');
+          } else {
+            overlayWin.classList.remove('hidden');
+          }
           soundWin();
         }, 270);
         return;
@@ -618,9 +666,14 @@
 
       // Check game over
       if (!hasMovesLeft()) {
-        setTimeout(() => {
+        setTimeout(async () => {
           loseScoreEl.textContent = score.toLocaleString();
-          overlayLose.classList.remove('hidden');
+          if (await esTop10(score)) {
+            overlayLose.classList.add('hidden');
+            overlayRecord.classList.remove('hidden');
+          } else {
+            overlayLose.classList.remove('hidden');
+          }
           soundGameOver();
         }, 370);
       }
@@ -674,6 +727,32 @@
       void scoreEl.offsetWidth;
       scoreEl.classList.add('bump');
       setTimeout(() => scoreEl.classList.remove('bump'), 350);
+    }
+
+    /* ── SUPABASE RECORDS ───────────────────────────── */
+    async function esTop10(score) {
+      const { count, error } = await supabase
+        .from('records')
+        .select('id', { count: 'exact', head: true })
+        .gt('puntaje', score);
+      if (error) return false;
+      return (count || 0) < 10;
+    }
+
+    async function guardarRecord(nombre, identificacion, score) {
+      const { error } = await supabase
+        .from('records')
+        .insert([{ nombre, identificacion, puntaje: score }]);
+      return error;
+    }
+
+    async function obtenerTop10() {
+      const { data, error } = await supabase
+        .from('records')
+        .select('nombre, identificacion, puntaje, created_at')
+        .order('puntaje', { ascending: false })
+        .limit(10);
+      return error ? [] : (data || []);
     }
 
     /* ── INIT ───────────────────────────────────────── */
@@ -736,6 +815,43 @@
     document.getElementById('win-restart-btn').addEventListener('click', initGame);
     document.getElementById('lose-restart-btn').addEventListener('click', initGame);
 
+    document.getElementById('guardar-record-btn').addEventListener('click', async () => {
+      const nombre = document.getElementById('record-nombre').value.trim() || 'Anónimo';
+      const ident  = document.getElementById('record-ident').value.trim() || 'Sin identificar';
+      if (!nombre || !ident) { alert('Completa ambos campos'); return; }
+
+      const error = await guardarRecord(nombre, ident, score);
+      if (error) { alert('Error guardando el récord'); return; }
+
+      document.getElementById('record-nombre').value = '';
+      document.getElementById('record-ident').value = '';
+      overlayRecord.classList.add('hidden');
+
+      if (won) {
+        winScoreEl.textContent = score.toLocaleString();
+        overlayWin.classList.remove('hidden');
+      } else {
+        loseScoreEl.textContent = score.toLocaleString();
+        overlayLose.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('ver-record-btn').addEventListener('click', async () => {
+      const top = await obtenerTop10();
+      leaderboardLista.innerHTML = top.map((r, i) => `
+        <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border);">
+          <strong>#${i+1}</strong> <span>${r.nombre}</span>
+          <span style="font-size:0.8rem; color:var(--text-muted);">${r.identificacion}</span>
+          <strong>${r.puntaje.toLocaleString()}</strong>
+        </div>
+      `).join('');
+      overlayLeaderboard.classList.remove('hidden');
+    });
+
+    document.getElementById('cerrar-leaderboard-btn').addEventListener('click', () => {
+      overlayLeaderboard.classList.add('hidden');
+    });
+
     // Unlock audio on first user gesture
     ['click','keydown'].forEach(ev =>
       document.addEventListener(ev, () => getCtx(), { once: true }));
@@ -744,6 +860,12 @@
     buildLegend();
     bestEl.textContent = bestScore.toLocaleString();
     initGame();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('SW registrado'))
+        .catch((err) => console.error('Error SW:', err));
+    }
   })();
   </script>
 </body>

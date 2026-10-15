@@ -1,5 +1,15 @@
-const CACHE_NAME = 'mandalefruta-v1';
-const ASSETS = ['/', '/index.html', '/icon.jpg', '/manifest.json'];
+const CACHE_NAME = 'mandalefruta-v3';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/script.js',
+  '/supabase.js',
+  '/icon-192.png',
+  '/icon-512.jpg',
+  '/icon-512-maskable.jpg',
+  '/manifest.json'
+];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
